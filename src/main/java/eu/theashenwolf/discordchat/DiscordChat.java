@@ -4,14 +4,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class DiscordChat extends JavaPlugin {
 
+    DiscordBot bot;
+
     @Override
     public void onEnable() {
         // Plugin startup logic
-        DiscordBot bot = new DiscordBot();
+        bot = new DiscordBot();
     }
 
     @Override
     public void onDisable() {
+        bot.OnDisconnect();
         // Plugin shutdown logic
     }
 }
