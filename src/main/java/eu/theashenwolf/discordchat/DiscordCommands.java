@@ -35,15 +35,16 @@ public class DiscordCommands {
     }
 
     public void Help(boolean allowDebug) {
-        DiscordMessenger.Respond("**Prefix:** " + prefix);
-        DiscordMessenger.Respond("**attach:** Attaches current channel as the channel the bot will send messages to.");
-        DiscordMessenger.Respond("**detach:** Detaches current channel.");
-        DiscordMessenger.Respond("**info:** Displays info about current attachment status");
-        DiscordMessenger.Respond("**help:** Displays this help");
+        DiscordMessenger.Respond(" **Prefix:** `" + prefix + "`");
+        DiscordMessenger.Respond("\n** ===== AVAILABLE COMMANDS ===== **");
+        DiscordMessenger.Respond("> **attach:** Attaches current channel as the channel the bot will send messages to.");
+        DiscordMessenger.Respond("> **detach:** Detaches current channel.");
+        DiscordMessenger.Respond("> **info:** Displays info about current attachment status");
+        DiscordMessenger.Respond("> **help:** Displays this help");
 
         if (allowDebug) {
-            DiscordMessenger.Respond("\n** ===== DEBUG COMMANDS ===== **\n");
-            DiscordMessenger.Respond("**mcmsg [message]:** Sends a message formatted like coming from the server");
+            DiscordMessenger.Respond("\n** ===== DEBUG COMMANDS ===== **");
+            DiscordMessenger.Respond("> **mcmsg [message]:** Sends a message formatted like coming from the server");
         }
     }
 

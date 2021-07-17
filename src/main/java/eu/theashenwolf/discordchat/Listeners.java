@@ -26,7 +26,7 @@ public class Listeners implements Listener {
 
     @EventHandler()
     public void OnPlayerDied(PlayerDeathEvent event) {
-        DiscordMessenger.OnDeathMessage(event.toString());
+        DiscordMessenger.OnDeathMessage(event.getDeathMessage());
     }
 
 }
