@@ -10,6 +10,11 @@ public final class DiscordChat extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         bot = new DiscordBot();
+        MinecraftMessenger.Init(getServer());
+
+        Listeners listeners = new Listeners();
+
+        getServer().getPluginManager().registerEvents(listeners, this);
     }
 
     @Override
@@ -17,4 +22,8 @@ public final class DiscordChat extends JavaPlugin {
         bot.OnDisconnect();
         // Plugin shutdown logic
     }
+
+
+
 }
+

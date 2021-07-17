@@ -47,13 +47,17 @@ public class DiscordCommands {
         }
     }
 
+    public void List() {
+
+    }
+
     public void Debug_Mcmsg(String[] args) {
         if (args.length == 0) return;
         else {
 
             StringBuffer stringBuffer = new StringBuffer();
             for (int i = 0; i < args.length; i++) {
-                stringBuffer.append(args[i]);
+                stringBuffer.append(args[i] + " ");
             }
 
             DiscordMessenger.OnMessageFromMinecraft("Debugging Player", stringBuffer.toString());

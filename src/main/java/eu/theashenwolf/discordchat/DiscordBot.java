@@ -59,13 +59,13 @@ public class DiscordBot {
 
         if (DiscordMessenger.IsAttached() && event.getChannel() == DiscordMessenger.attachedChannel) {
             DiscordMessenger.UpdateResponseChannel(event.getChannel());
-            MinecraftMessenger.SendMessage(message.trim());
+            MinecraftMessenger.SendMessage(event.getMessageAuthor().getDisplayName(), message.trim());
         }
     }
 
     private void HandleCommand(String fullCommand) {
-        String[] commandArr = fullCommand.toLowerCase().split("\\s+");
-        String command = commandArr[0];
+        String[] commandArr = fullCommand.split("\\s+");
+        String command = commandArr[0].toLowerCase();
         String[] args = Arrays.copyOfRange(commandArr, 1, commandArr.length);
 
         if (ALLOW_DEBUG) {
@@ -81,6 +81,7 @@ public class DiscordBot {
             case "detach": discordCommands.Detach(); break;
             case "info": discordCommands.Info(ALLOW_DEBUG); break;
             case "help": discordCommands.Help(ALLOW_DEBUG); break;
+            case "list": discordCommands.List(); break;
             default:
                 DiscordMessenger.Respond("Unknown command.");
                 break;

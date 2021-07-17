@@ -25,7 +25,6 @@ public class DiscordMessenger {
 
     // ===== Messages DISCORD =====
     public static void SendMessage(String message) {
-        System.out.println("[DC] " + message);
         attachedChannel.sendMessage(message);
     }
 
@@ -35,11 +34,17 @@ public class DiscordMessenger {
 
     public static void OnMessageFromMinecraft(String playerName, String message) {
         if (attachedChannel != null) {
-            System.out.println("[MC -> DC] " + "**[" + playerName + "]** " + message);
-            SendMessage("**[" + playerName + "]** " + message);
+            attachedChannel.sendMessage("**[" + playerName + "]** " + message);
         }
     }
 
+    public static void JoinLeaveMessage(String message) {
+        attachedChannel.sendMessage("**" + message + "**");
+    }
+
+    public static void OnDeathMessage(String message) {
+        attachedChannel.sendMessage(":skull: **" + message + "**");
+    }
 
     // ===== HELPERS =====
 
