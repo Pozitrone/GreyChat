@@ -82,6 +82,7 @@ public class DiscordBot {
             case "info": discordCommands.Info(ALLOW_DEBUG); break;
             case "help": discordCommands.Help(ALLOW_DEBUG); break;
             case "list": discordCommands.List(); break;
+            case "time": discordCommands.Time(); break;
             default:
                 DiscordMessenger.Respond("Unknown command.");
                 break;

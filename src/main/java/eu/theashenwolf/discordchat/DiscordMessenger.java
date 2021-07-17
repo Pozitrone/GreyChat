@@ -42,8 +42,14 @@ public class DiscordMessenger {
         attachedChannel.sendMessage("**" + message + "**");
     }
 
-    public static void OnDeathMessage(String message) {
-        attachedChannel.sendMessage(":skull: **" + message + "**");
+    public static void OnDeathMessage(String message, boolean wasPvPKill) {
+        if (wasPvPKill) {
+            attachedChannel.sendMessage(":crossed_swords:  **" + message + "**");
+        }
+        else {
+            attachedChannel.sendMessage(":skull: **" + message + "**");
+        }
+
     }
 
     // ===== HELPERS =====
