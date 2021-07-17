@@ -1,0 +1,11 @@
+main: eu.theashenwolf.discordchat.DiscordChat
+name: DiscordChat
+version: 0.0.1
+author: TheAshenWolf
+description: An Example plugin
+# commands:
+#  mycommand:
+#  description: An example command
+#  usage: /mycommand
+#  permission: myplugin.mycommand
+#  permission-message: You don't have the myplugin.mycommand permission.

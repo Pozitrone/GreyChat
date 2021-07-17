@@ -1,0 +1,8 @@
+name: DiscordChat
+version: ${project.version}
+main: eu.theashenwolf.discordchat.DiscordChat
+api-version: 1.17
+prefix: DC
+authors: [ TheAshenWolf ]
+description: Connection between Minecraft server and discord
+website: theashenwolf.eu
