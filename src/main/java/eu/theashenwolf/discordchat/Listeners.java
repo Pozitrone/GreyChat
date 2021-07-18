@@ -1,6 +1,5 @@
 package eu.theashenwolf.discordchat;
 
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
