@@ -1,14 +1,18 @@
 package eu.theashenwolf.discordchat;
 
 
+import net.md_5.bungee.api.ChatColor;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.channel.TextChannel;
+import org.javacord.api.entity.server.Server;
+import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
 import org.javacord.api.util.event.ListenerManager;
-
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DiscordBot {
 
@@ -17,8 +21,9 @@ public class DiscordBot {
     private boolean ALLOW_DEBUG = true;
     private Long CHANNEL_ID = 542070256320118815L;
 
-
-    private DiscordApi api;
+    private static Map<String, String> users;
+    private static Server discordServer;
+    private static DiscordApi api;
     private DiscordCommands discordCommands;
     private ListenerManager<MessageCreateListener> listenerManager;
 
@@ -38,6 +43,7 @@ public class DiscordBot {
         }
 
         discordCommands = new DiscordCommands(PREFIX);
+        users = new HashMap<String, String>();
     }
 
     public void OnDisconnect() {
@@ -47,6 +53,8 @@ public class DiscordBot {
     }
 
     public void OnMessage(MessageCreateEvent event) {
+        users.putIfAbsent(String.valueOf(event.getMessageAuthor().getId()), event.getMessageAuthor().getDisplayName());
+
         if (event.getMessageAuthor().isBotUser()) return;
 
         String message = event.getMessageContent();
@@ -61,6 +69,8 @@ public class DiscordBot {
             DiscordMessenger.UpdateResponseChannel(event.getChannel());
             MinecraftMessenger.SendMessage(event.getMessageAuthor().getDisplayName(), message.trim(), event.getMessageAuthor().getIdAsString());
         }
+
+
     }
 
     private void HandleCommand(String fullCommand, boolean isServerAdmin) {
@@ -97,5 +107,19 @@ public class DiscordBot {
                 DiscordMessenger.Respond("Unknown command.");
                 break;
         }
+    }
+
+    public static String ReplaceMentions(String message) {
+        while (message.matches(".*<@![0-9]{18}>.*")) {
+            String playerId = message.split("<@!")[1].split(">")[0];
+
+            if (!users.containsKey(playerId)) {
+                return message;
+            }
+
+            message = message.replaceFirst("<@![0-9]{18}>", ChatColor.BLUE + "@" + users.get(playerId) + ChatColor.RESET);
+            System.out.println(message);
+        }
+        return message;
     }
 }

@@ -8,6 +8,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.hover.content.Content;
 import net.md_5.bungee.api.chat.hover.content.Text;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 
@@ -22,13 +23,13 @@ public class MinecraftMessenger {
 
     public static void SendMessage(String playerName, String message, String playerId) {
         BaseComponent[] component =
-                new ComponentBuilder("[").color(ChatColor.WHITE)
+                new ComponentBuilder("[").color(ChatColor.RESET)
                         .append("DISCORD").color(ChatColor.BLUE)
-                        .append("] ").color(ChatColor.WHITE)
-                        .append("<" + playerName + "> ").color(ChatColor.WHITE)
+                        .append("] ").color(ChatColor.RESET)
+                        .append("<" + playerName + "> ").color(ChatColor.RESET)
                             .event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "<@!" + playerId + ">"))
                             .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Tag " + playerName)))
-                        .append(message).color(ChatColor.WHITE)
+                        .append(message).color(ChatColor.RESET)
                         .create();
 
         gameServer.broadcast(component);
