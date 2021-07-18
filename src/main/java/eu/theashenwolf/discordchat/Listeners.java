@@ -49,7 +49,7 @@ public class Listeners implements Listener {
             DiscordMessenger.SendMessage(":tada: **" + playerName + "** achieved " + Advancements.Advancements.get(advancementKey));
         }
         else if (Advancements.Challenges.containsKey(advancementKey)) {
-            DiscordMessenger.SendMessage(":trophy: **" + playerName + "** completed the " + Advancements.Advancements.get(advancementKey) + " challenge!");
+            DiscordMessenger.SendMessage(":trophy: **" + playerName + "** completed the " + Advancements.Challenges.get(advancementKey) + " challenge!");
         }
 
     }
