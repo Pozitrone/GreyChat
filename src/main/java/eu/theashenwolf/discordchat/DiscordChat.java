@@ -2,8 +2,6 @@ package eu.theashenwolf.discordchat;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import static eu.theashenwolf.discordchat.MinecraftMessenger.GetTime;
-
 public final class DiscordChat extends JavaPlugin {
 
     DiscordBot bot;

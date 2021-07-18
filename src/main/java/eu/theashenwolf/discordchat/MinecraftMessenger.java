@@ -1,11 +1,15 @@
 package eu.theashenwolf.discordchat;
 
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+//import org.bukkit.ChatColor;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.hover.content.Content;
+import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.Collection;
 
 public class MinecraftMessenger {
     // ===== Messages MINECRAFT =====
@@ -16,8 +20,18 @@ public class MinecraftMessenger {
         gameServer = server;
     }
 
-    public static void SendMessage(String playerName, String message) {
-        gameServer.broadcastMessage("[" + ChatColor.BLUE + "DISCORD" + ChatColor.WHITE + "] <" + playerName + "> " + message);
+    public static void SendMessage(String playerName, String message, String playerId) {
+        BaseComponent[] component =
+                new ComponentBuilder("[").color(ChatColor.WHITE)
+                        .append("DISCORD").color(ChatColor.BLUE)
+                        .append("] ").color(ChatColor.WHITE)
+                        .append("<" + playerName + "> ").color(ChatColor.WHITE)
+                            .event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "<@!" + playerId + ">"))
+                            .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Tag " + playerName)))
+                        .append(message).color(ChatColor.WHITE)
+                        .create();
+
+        gameServer.broadcast(component);
     }
 
     public static String GetPlayerList() {

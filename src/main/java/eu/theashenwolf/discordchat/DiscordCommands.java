@@ -8,7 +8,7 @@ public class DiscordCommands {
         prefix = newPrefix;
     }
 
-    public void Attach() {
+    public void Admin_Attach() {
         if (DiscordMessenger.IsAttached()) {
             DiscordMessenger.Respond("Already attached to <#" + DiscordMessenger.attachedChannel.getId() + ">");
             return;
@@ -19,7 +19,7 @@ public class DiscordCommands {
 
     }
 
-    public void Detach() {
+    public void Admin_Detach() {
         if (!DiscordMessenger.IsAttached()) {
             DiscordMessenger.Respond("Not attached to anything.");
         }
@@ -28,18 +28,20 @@ public class DiscordCommands {
         DiscordMessenger.Respond("Successfully detached");
     }
 
-    public void Info(boolean allowDebug) {
+    public void Admin_Info(boolean allowDebug) {
         DiscordMessenger.Respond("**Attached: **" + (DiscordMessenger.attachedChannel == null ? "false" : "true"));
         if (DiscordMessenger.IsAttached()) DiscordMessenger.Respond("**Attached to: **" + "<#" + DiscordMessenger.attachedChannel.getId() + ">");
         if (allowDebug) DiscordMessenger.Respond("**Debug enabled: ** true");
     }
 
-    public void Help(boolean allowDebug) {
+    public void Help(boolean allowDebug, boolean isServerAdmin) {
         DiscordMessenger.Respond(" **Prefix:** `" + prefix + "`\n" + "\n** ===== AVAILABLE COMMANDS ===== **");
         StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append("> **attach:** Attaches current channel as the channel the bot will send messages to.\n");
-        stringBuffer.append("> **detach:** Detaches current channel.\n");
-        stringBuffer.append("> **info:** Lists info about current attachment status\n");
+        if (isServerAdmin) {
+            stringBuffer.append("> A - **attach:** Attaches current channel as the channel the bot will send messages to.\n");
+            stringBuffer.append("> A - **detach:** Detaches current channel.\n");
+            stringBuffer.append("> A - **info:** Lists info about current attachment status\n");
+        }
         stringBuffer.append("> **help:** Displays this help\n");
         stringBuffer.append("> **list:** Shows the list of active players\n");
         stringBuffer.append("> **time:** Displays the current in-game time\n");

@@ -29,7 +29,7 @@ public class DiscordBot {
         api = new DiscordApiBuilder().setToken(TOKEN).login().join();
 
         // Add a listener which answers with "Pong!" if someone writes "!ping"
-        listenerManager = api.addMessageCreateListener(event -> OnMessage(event));
+        listenerManager = api.addMessageCreateListener(this::OnMessage);
 
         if (api.getTextChannelById(CHANNEL_ID).isPresent()) {
             TextChannel defaultChannel = api.getTextChannelById(CHANNEL_ID).get();
@@ -53,20 +53,30 @@ public class DiscordBot {
 
         if (message.charAt(0) == PREFIX) {
             DiscordMessenger.UpdateResponseChannel(event.getChannel());
-            HandleCommand(message.substring(1).trim());
+            HandleCommand(message.substring(1).trim(), event.getMessageAuthor().isServerAdmin());
             return;
         }
 
         if (DiscordMessenger.IsAttached() && event.getChannel() == DiscordMessenger.attachedChannel) {
             DiscordMessenger.UpdateResponseChannel(event.getChannel());
-            MinecraftMessenger.SendMessage(event.getMessageAuthor().getDisplayName(), message.trim());
+            MinecraftMessenger.SendMessage(event.getMessageAuthor().getDisplayName(), message.trim(), event.getMessageAuthor().getIdAsString());
         }
     }
 
-    private void HandleCommand(String fullCommand) {
+    private void HandleCommand(String fullCommand, boolean isServerAdmin) {
         String[] commandArr = fullCommand.split("\\s+");
         String command = commandArr[0].toLowerCase();
         String[] args = Arrays.copyOfRange(commandArr, 1, commandArr.length);
+
+        switch (command) {
+            case "attach":
+            case "detach":
+            case "info":
+                if (!isServerAdmin) {
+                    DiscordMessenger.Respond("Insufficient permissions");
+                    return;
+                }
+        }
 
         if (ALLOW_DEBUG) {
             switch (command) {
@@ -77,10 +87,10 @@ public class DiscordBot {
         }
 
         switch (command) {
-            case "attach": discordCommands.Attach(); break;
-            case "detach": discordCommands.Detach(); break;
-            case "info": discordCommands.Info(ALLOW_DEBUG); break;
-            case "help": discordCommands.Help(ALLOW_DEBUG); break;
+            case "attach": discordCommands.Admin_Attach(); break;
+            case "detach": discordCommands.Admin_Detach(); break;
+            case "info": discordCommands.Admin_Info(ALLOW_DEBUG); break;
+            case "help": discordCommands.Help(ALLOW_DEBUG, isServerAdmin); break;
             case "list": discordCommands.List(); break;
             case "time": discordCommands.Time(); break;
             default:
