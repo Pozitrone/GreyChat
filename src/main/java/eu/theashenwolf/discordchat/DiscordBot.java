@@ -1,6 +1,6 @@
 package eu.theashenwolf.discordchat;
 
-
+import static eu.theashenwolf.discordchat.Config.*;
 import net.md_5.bungee.api.ChatColor;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
@@ -9,17 +9,13 @@ import org.javacord.api.entity.server.Server;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
 import org.javacord.api.util.event.ListenerManager;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class DiscordBot {
 
-    private String TOKEN = "NjIxNzEyMjI3NDg0ODI3NjQ5.XXpUoQ.TYB-brsnJajH1OQ9_XjNvv9IWIQ";
-    private Character PREFIX = '|';
-    private boolean ALLOW_DEBUG = true;
-    private Long CHANNEL_ID = 542070256320118815L;
+
 
     private static Map<String, String> users;
     private static Server discordServer;

@@ -20,16 +20,19 @@ public class Listeners implements Listener {
 
     @EventHandler()
     public void OnPlayerJoin(PlayerJoinEvent event) {
+        if (!Config.SEND_JOINLEAVE) return;
         DiscordMessenger.JoinLeaveMessage(":green_circle: " + event.getPlayer().getName() + " joined the game.");
     }
 
     @EventHandler()
     public void OnPlayerLeave(PlayerQuitEvent event) {
+        if (!Config.SEND_JOINLEAVE) return;
         DiscordMessenger.JoinLeaveMessage(":red_circle: " + event.getPlayer().getName() + " left the game.");
     }
 
     @EventHandler()
     public void OnPlayerDied(PlayerDeathEvent event) {
+        if (!Config.SEND_DEATHS) return;
         Player player = event.getEntity();
         if (player.isDead()) {
             if (player.getKiller() instanceof Player) {
@@ -42,6 +45,7 @@ public class Listeners implements Listener {
 
     @EventHandler
     public void OnAchievement(PlayerAdvancementDoneEvent event) {
+        if (!Config.SEND_ADVANCEMENTS) return;
         String playerName = event.getPlayer().getName();
         String advancementKey = event.getAdvancement().getKey().getKey();
         if (event.message() == null) return;
