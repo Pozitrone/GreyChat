@@ -19,6 +19,18 @@ public class MinecraftMessenger {
     }
 
     public static void SendMessage(String playerName, String message, String playerId) {
+        BaseComponent[] urlHandling;
+
+        if (message.matches("https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)")){
+            urlHandling = new ComponentBuilder(message)
+                    .event(new ClickEvent(ClickEvent.Action.OPEN_URL, message))
+                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Open link")))
+                    .create();
+        }
+        else {
+            urlHandling = new ComponentBuilder(message).create();
+        }
+
         BaseComponent[] component =
                 new ComponentBuilder("[").color(ChatColor.RESET)
                         .append("DISCORD").color(ChatColor.BLUE)
@@ -26,9 +38,10 @@ public class MinecraftMessenger {
                         .append("<" + playerName + "> ").color(ChatColor.RESET)
                             .event(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "<@!" + playerId + ">"))
                             .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Tag " + playerName)))
-                        .append(message).color(ChatColor.RESET)
+                        .append("").reset()
+                        .append(urlHandling)
                         .create();
-
+        System.out.println("[DISCORD] <" + playerName + "> " + message);
         gameServer.broadcast(component);
     }
 

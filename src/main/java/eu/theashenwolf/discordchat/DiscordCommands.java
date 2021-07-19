@@ -45,6 +45,7 @@ public class DiscordCommands {
         stringBuffer.append("> **help:** Displays this help\n");
         stringBuffer.append("> **list:** Shows the list of active players\n");
         stringBuffer.append("> **time:** Displays the current in-game time\n");
+        stringBuffer.append("> **changelog:** Displays the changelog for the latest version\n");
         DiscordMessenger.Respond(stringBuffer.toString());
 
         if (allowDebug) {
@@ -53,6 +54,10 @@ public class DiscordCommands {
             stringBuffer.append("> **mcmsg [message]:** Sends a message formatted like coming from the server\n");
             DiscordMessenger.Respond(stringBuffer.toString());
         }
+    }
+
+    public void Changelog() {
+        DiscordMessenger.Respond(Config.CHANGELOG);
     }
 
     public void List() {

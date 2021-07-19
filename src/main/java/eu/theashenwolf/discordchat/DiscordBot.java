@@ -4,8 +4,10 @@ import static eu.theashenwolf.discordchat.Config.*;
 import net.md_5.bungee.api.ChatColor;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
+import org.javacord.api.entity.activity.ActivityType;
 import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.server.Server;
+import org.javacord.api.entity.user.UserStatus;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
 import org.javacord.api.util.event.ListenerManager;
@@ -18,7 +20,6 @@ public class DiscordBot {
 
 
     private static Map<String, String> users;
-    private static Server discordServer;
     private static DiscordApi api;
     private DiscordCommands discordCommands;
     private ListenerManager<MessageCreateListener> listenerManager;
@@ -40,6 +41,8 @@ public class DiscordBot {
 
         discordCommands = new DiscordCommands(PREFIX);
         users = new HashMap<String, String>();
+        api.updateStatus(UserStatus.ONLINE);
+        api.updateActivity(Config.ACTIVITY_TYPE, Config.ACTIVITY);
     }
 
     public void OnDisconnect() {
@@ -55,18 +58,21 @@ public class DiscordBot {
 
         String message = event.getMessageContent();
 
-        if (message.charAt(0) == PREFIX) {
-            DiscordMessenger.UpdateResponseChannel(event.getChannel());
-            HandleCommand(message.substring(1).trim(), event.getMessageAuthor().isServerAdmin());
-            return;
+        try {
+            if (message.charAt(0) == PREFIX) {
+                DiscordMessenger.UpdateResponseChannel(event.getChannel());
+                HandleCommand(message.substring(1).trim(), event.getMessageAuthor().isServerAdmin());
+                return;
+            }
+
+            if (DiscordMessenger.IsAttached() && event.getChannel() == DiscordMessenger.attachedChannel) {
+                DiscordMessenger.UpdateResponseChannel(event.getChannel());
+                MinecraftMessenger.SendMessage(event.getMessageAuthor().getDisplayName(), message.trim(), event.getMessageAuthor().getIdAsString());
+            }
         }
-
-        if (DiscordMessenger.IsAttached() && event.getChannel() == DiscordMessenger.attachedChannel) {
-            DiscordMessenger.UpdateResponseChannel(event.getChannel());
-            MinecraftMessenger.SendMessage(event.getMessageAuthor().getDisplayName(), message.trim(), event.getMessageAuthor().getIdAsString());
+        catch (Exception e) {
+            DiscordMessenger.Respond("*I am sorry, but files won't show up in the game, unless provided as links*");
         }
-
-
     }
 
     private void HandleCommand(String fullCommand, boolean isServerAdmin) {
@@ -93,12 +99,13 @@ public class DiscordBot {
         }
 
         switch (command) {
-            case "attach": discordCommands.Admin_Attach(); break;
-            case "detach": discordCommands.Admin_Detach(); break;
-            case "info": discordCommands.Admin_Info(ALLOW_DEBUG); break;
+            case "attach": discordCommands.Admin_Attach(); break; // admin
+            case "detach": discordCommands.Admin_Detach(); break; // admin
+            case "info": discordCommands.Admin_Info(ALLOW_DEBUG); break; // admin
             case "help": discordCommands.Help(ALLOW_DEBUG, isServerAdmin); break;
             case "list": discordCommands.List(); break;
             case "time": discordCommands.Time(); break;
+            case "changelog": discordCommands.Changelog(); break;
             default:
                 DiscordMessenger.Respond("Unknown command.");
                 break;
