@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 public class MinecraftMessenger {
     // ===== Messages MINECRAFT =====
 
-    private static Server gameServer;
+    public static Server gameServer;
 
     public static void Init(Server server) {
         gameServer = server;

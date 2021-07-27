@@ -1,5 +1,15 @@
 package eu.theashenwolf.discordchat;
 
+import jdk.internal.joptsimple.util.KeyValuePair;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 public class DiscordCommands {
 
     private Character prefix;
@@ -46,6 +56,7 @@ public class DiscordCommands {
         stringBuffer.append("> **list:** Shows the list of active players\n");
         stringBuffer.append("> **time:** Displays the current in-game time\n");
         stringBuffer.append("> **changelog:** Displays the changelog for the latest version\n");
+        stringBuffer.append("> **deaths:** Returns the current death leaderboard\n");
         DiscordMessenger.Respond(stringBuffer.toString());
 
         if (allowDebug) {
@@ -66,6 +77,33 @@ public class DiscordCommands {
 
     public void Time() {
         DiscordMessenger.Respond("Current in-game time: **" + MinecraftMessenger.GetTime() + "**");
+    }
+
+    public void Deaths() {
+        ScoreboardManager scoreboardManager = MinecraftMessenger.gameServer.getScoreboardManager();
+        Scoreboard deathScoreboard = scoreboardManager.getMainScoreboard().getObjective("Deaths").getScoreboard();
+
+        HashMap<String, Integer> leaderboard = new HashMap<>();
+
+        for (String entry : deathScoreboard.getEntries()) {
+            for (Score score : deathScoreboard.getScores(entry)) {
+                leaderboard.putIfAbsent(score.getEntry(), score.getScore());
+            }
+        }
+
+        Map<String, Integer> sortedMap =
+                leaderboard.entrySet().stream()
+                        .sorted(Map.Entry.comparingByValue())
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                                (e1, e2) -> e1, LinkedHashMap::new));
+
+        String header = "**===== DEATH LEADERBOARD =====**\n";
+        String message = "";
+        for (String key : sortedMap.keySet()) {
+            message = key + " - **" + sortedMap.get(key) + "**\n" + message;
+        }
+
+        DiscordMessenger.Respond(header + message);
     }
 
     public void Debug_Mcmsg(String[] args) {

@@ -58,21 +58,22 @@ public class DiscordBot {
 
         String message = event.getMessageContent();
 
-        try {
-            if (message.charAt(0) == PREFIX) {
-                DiscordMessenger.UpdateResponseChannel(event.getChannel());
-                HandleCommand(message.substring(1).trim(), event.getMessageAuthor().isServerAdmin());
-                return;
-            }
+        if (message.length() > 0 && message.charAt(0) == PREFIX) {
+            DiscordMessenger.UpdateResponseChannel(event.getChannel());
+            HandleCommand(message.substring(1).trim(), event.getMessageAuthor().isServerAdmin());
+            return;
+        }
 
-            if (DiscordMessenger.IsAttached() && event.getChannel() == DiscordMessenger.attachedChannel) {
-                DiscordMessenger.UpdateResponseChannel(event.getChannel());
-                MinecraftMessenger.SendMessage(event.getMessageAuthor().getDisplayName(), message.trim(), event.getMessageAuthor().getIdAsString());
-            }
-        }
-        catch (Exception e) {
+        if (event.getChannel() == DiscordMessenger.attachedChannel && !event.getMessageAttachments().isEmpty()) {
             DiscordMessenger.Respond("*I am sorry, but files won't show up in the game, unless provided as links*");
+            return;
         }
+
+        if (DiscordMessenger.IsAttached() && event.getChannel() == DiscordMessenger.attachedChannel) {
+            DiscordMessenger.UpdateResponseChannel(event.getChannel());
+            MinecraftMessenger.SendMessage(event.getMessageAuthor().getDisplayName(), message.trim(), event.getMessageAuthor().getIdAsString());
+        }
+
     }
 
     private void HandleCommand(String fullCommand, boolean isServerAdmin) {
@@ -106,6 +107,7 @@ public class DiscordBot {
             case "list": discordCommands.List(); break;
             case "time": discordCommands.Time(); break;
             case "changelog": discordCommands.Changelog(); break;
+            case "deaths": discordCommands.Deaths(); break;
             default:
                 DiscordMessenger.Respond("Unknown command.");
                 break;
