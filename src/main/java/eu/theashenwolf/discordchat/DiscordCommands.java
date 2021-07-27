@@ -1,6 +1,9 @@
 package eu.theashenwolf.discordchat;
 
 import jdk.internal.joptsimple.util.KeyValuePair;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
@@ -81,13 +84,13 @@ public class DiscordCommands {
 
     public void Deaths() {
         ScoreboardManager scoreboardManager = MinecraftMessenger.gameServer.getScoreboardManager();
-        Scoreboard deathScoreboard = scoreboardManager.getMainScoreboard().getObjective("Deaths").getScoreboard();
-
+        Objective deaths = scoreboardManager.getMainScoreboard().getObjective("Deaths");
         HashMap<String, Integer> leaderboard = new HashMap<>();
 
-        for (String entry : deathScoreboard.getEntries()) {
-            for (Score score : deathScoreboard.getScores(entry)) {
-                leaderboard.putIfAbsent(score.getEntry(), score.getScore());
+        for (OfflinePlayer player : scoreboardManager.getMainScoreboard().getPlayers()) {
+            String entry = player.getName();
+            if (deaths.getScore(entry).getScore() != 0) {
+                leaderboard.putIfAbsent(deaths.getScore(entry).getEntry(), deaths.getScore(entry).getScore());
             }
         }
 
