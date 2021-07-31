@@ -3,10 +3,10 @@ package eu.theashenwolf.discordchat;
 import org.javacord.api.entity.activity.ActivityType;
 
 public class Config {
-    public static String TOKEN = "ODY2NzQxNDQwMDYyNjg1MjE1.YPW93g.Hi36k0r8QAc6U_iagrED4VuUbpA";
+    public static String TOKEN = "NjIxNzEyMjI3NDg0ODI3NjQ5.XXpicQ.j-_L-Ki9bKJS0DrwCG4k68Tmztg";//"ODY2NzQxNDQwMDYyNjg1MjE1.YPW93g.Hi36k0r8QAc6U_iagrED4VuUbpA";
     public static Character PREFIX = '|';
     public static boolean ALLOW_DEBUG = false;
-    public static Long CHANNEL_ID = 808736794035093546L;
+    public static Long CHANNEL_ID = 542070256320118815L;//808736794035093546L;
     public static boolean SEND_ADVANCEMENTS = true;
     public static boolean SEND_JOINLEAVE = true;
     public static boolean SEND_DEATHS = true;

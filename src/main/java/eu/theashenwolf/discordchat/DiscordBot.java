@@ -65,7 +65,7 @@ public class DiscordBot {
         }
 
         if (event.getChannel() == DiscordMessenger.attachedChannel && !event.getMessageAttachments().isEmpty()) {
-            DiscordMessenger.Respond("*I am sorry, but files won't show up in the game, unless provided as links*");
+            MinecraftMessenger.SendAttachmentMessage(event);
             return;
         }
 

@@ -8,6 +8,7 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+import org.javacord.api.event.message.MessageCreateEvent;
 
 public class MinecraftMessenger {
     // ===== Messages MINECRAFT =====
@@ -71,5 +72,13 @@ public class MinecraftMessenger {
         int minutes = (int)((time - hours * 1000) * 0.06);
 
         return ((hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes);
+    }
+
+    public static void SendAttachmentMessage(MessageCreateEvent event) {
+        String message = event.getMessageContent();
+
+        message += message.length() > 0 ? " [sent file]" : "[sent file]";
+
+        SendMessage(event.getMessageAuthor().getDisplayName(), message.trim(), event.getMessageAuthor().getIdAsString());
     }
 }
