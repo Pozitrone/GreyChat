@@ -22,6 +22,8 @@ public class MinecraftMessenger {
     public static void SendMessage(String playerName, String message, String playerId) {
         BaseComponent[] urlHandling;
 
+        message = DiscordBot.ReplaceMentions(message);
+
         if (message.matches("https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)")){
             urlHandling = new ComponentBuilder(message)
                     .event(new ClickEvent(ClickEvent.Action.OPEN_URL, message))
