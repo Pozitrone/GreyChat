@@ -14,7 +14,10 @@ public class Listeners implements Listener {
     @EventHandler()
     public void onChat(AsyncPlayerChatEvent event) {
         String originalMessage = event.getMessage();
-        event.setMessage(DiscordBot.ReplaceMentions(event.getMessage()));
+        String changedMessage = DiscordBot.ReplaceMentions(originalMessage);
+        String formattedMessage = DiscordBot.FormatMessage(changedMessage);
+
+        event.setMessage(formattedMessage);
         DiscordMessenger.OnMessageFromMinecraft(event.getPlayer().getName(), originalMessage);
     }
 

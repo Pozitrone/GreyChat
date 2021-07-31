@@ -123,8 +123,31 @@ public class DiscordBot {
             }
 
             message = message.replaceFirst("<@![0-9]{18}>", ChatColor.BLUE + "@" + users.get(playerId) + ChatColor.RESET);
-            System.out.println(message);
         }
+        return message;
+    }
+
+    public static String FormatMessage(String message) {
+        // handle **bold**
+        while (message.matches("(.*?)\\*\\*(.*?)\\*\\*(.*?)")) {
+            message = message.replaceFirst("(.*?)\\*\\*(.*?)\\*\\*(.*?)", "$1" + ChatColor.BOLD + "$2" + ChatColor.RESET + "$3");
+        }
+
+        // handle __underline__
+        while (message.matches("(.*?)__(.*?)__(.*?)")) {
+            message = message.replaceFirst("(.*?)__(.*?)__(.*?)", "$1" + ChatColor.UNDERLINE + "$2" + ChatColor.RESET + "$3");
+        }
+
+        // handle *italic* and _italic_
+        while (message.matches("(.*?)(?:\\*|_)(.*?)(?:\\*|_)(.*?)")) {
+            message = message.replaceFirst("(.*?)(?:\\*|_)(.*?)(?:\\*|_)(.*?)", "$1" + ChatColor.ITALIC + "$2" + ChatColor.RESET + "$3");
+        }
+
+        // handle ~~strike~~
+        while (message.matches("(.*?)~~(.*?)~~(.*?)")) {
+            message = message.replaceFirst("(.*?)~~(.*?)~~(.*?)", "$1" + ChatColor.STRIKETHROUGH + "$2" + ChatColor.RESET + "$3");
+        }
+
         return message;
     }
 }
