@@ -1,11 +1,8 @@
 package eu.theashenwolf.discordchat;
 
-import jdk.internal.joptsimple.util.KeyValuePair;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
+import org.bukkit.Server;
 import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
 import java.util.HashMap;
@@ -16,6 +13,8 @@ import java.util.stream.Collectors;
 public class DiscordCommands {
 
     private Character prefix;
+
+    public static Server gameServer;
 
     public DiscordCommands(Character newPrefix) {
         prefix = newPrefix;
@@ -87,11 +86,9 @@ public class DiscordCommands {
         Objective deaths = scoreboardManager.getMainScoreboard().getObjective("Deaths");
         HashMap<String, Integer> leaderboard = new HashMap<>();
 
-        for (OfflinePlayer player : scoreboardManager.getMainScoreboard().getPlayers()) {
+        for (OfflinePlayer player : gameServer.getOfflinePlayers()) {
             String entry = player.getName();
-            if (deaths.getScore(entry).getScore() != 0) {
-                leaderboard.putIfAbsent(deaths.getScore(entry).getEntry(), deaths.getScore(entry).getScore());
-            }
+            leaderboard.putIfAbsent(deaths.getScore(entry).getEntry(), deaths.getScore(entry).getScore());
         }
 
         Map<String, Integer> sortedMap =

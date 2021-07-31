@@ -11,6 +11,7 @@ public final class DiscordChat extends JavaPlugin {
         // Plugin startup logic
         bot = new DiscordBot();
         MinecraftMessenger.Init(getServer());
+        DiscordCommands.gameServer = getServer();
 
         Listeners listeners = new Listeners();
 
