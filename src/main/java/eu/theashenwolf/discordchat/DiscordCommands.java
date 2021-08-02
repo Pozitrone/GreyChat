@@ -5,10 +5,13 @@ import org.bukkit.Server;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.ScoreboardManager;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static eu.theashenwolf.discordchat.Config.PLAYER_LINK_FILENAME;
 
 public class DiscordCommands {
 
@@ -46,6 +49,14 @@ public class DiscordCommands {
         if (allowDebug) DiscordMessenger.Respond("**Debug enabled: ** true");
     }
 
+    public void Admin_PurgeLinks() {
+        File database = new File(PLAYER_LINK_FILENAME);
+        boolean success = database.delete();
+        if (success) DiscordBot.users.clear();
+
+        if (success) DiscordMessenger.Respond("**Link purge was successful**");
+    }
+
     public void Help(boolean allowDebug, boolean isServerAdmin) {
         DiscordMessenger.Respond(" **Prefix:** `" + prefix + "`\n" + "\n** ===== AVAILABLE COMMANDS ===== **");
         StringBuffer stringBuffer = new StringBuffer();
@@ -53,6 +64,7 @@ public class DiscordCommands {
             stringBuffer.append("> A - **attach:** Attaches current channel as the channel the bot will send messages to.\n");
             stringBuffer.append("> A - **detach:** Detaches current channel.\n");
             stringBuffer.append("> A - **info:** Lists info about current attachment status\n");
+            stringBuffer.append("> A - **purgeLinks:** Clears all remembered player data\n");
         }
         stringBuffer.append("> **help:** Displays this help\n");
         stringBuffer.append("> **list:** Shows the list of active players\n");
