@@ -6,7 +6,7 @@
 
     <groupId>eu.theashenwolf.discordChat</groupId>
     <artifactId>DiscordChat</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
     <packaging>jar</packaging>
 
     <name>DiscordChat</name>
@@ -88,6 +88,21 @@
             <artifactId>javacord</artifactId>
             <version>3.3.2</version>
             <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>4.4</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.9.8</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.9.8</version>
         </dependency>
     </dependencies>
 </project>

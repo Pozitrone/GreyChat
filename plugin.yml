@@ -1,6 +1,6 @@
 main: eu.theashenwolf.discordchat.DiscordChat
 name: DiscordChat
-version: 1.0.3
+version: 1.0.4
 author: TheAshenWolf
 description: An Example plugin
 # commands:
