@@ -1,24 +1,91 @@
 package eu.theashenwolf.discordchat;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.javacord.api.entity.activity.ActivityType;
 
-public class Config {
-    public static String TOKEN = "ODY2NzQxNDQwMDYyNjg1MjE1.YPW93g.Hi36k0r8QAc6U_iagrED4VuUbpA"; // Graychat
-    //public static String TOKEN = "NjIxNzEyMjI3NDg0ODI3NjQ5.XXpicQ.j-_L-Ki9bKJS0DrwCG4k68Tmztg"; // Raven
-    public static Character PREFIX = '|';
-    public static boolean ALLOW_DEBUG = false;
-    public static Long CHANNEL_ID = 808736794035093546L; // Graychat
-    //public static Long CHANNEL_ID = 542070256320118815L; // Raven
-    public static boolean SEND_ADVANCEMENTS = true;
-    public static boolean SEND_JOINLEAVE = true;
-    public static boolean SEND_DEATHS = true;
-    public static String ACTIVITY = "over players";
-    public static ActivityType ACTIVITY_TYPE = ActivityType.WATCHING;
-    public static String PLAYER_LINK_FILENAME = "playerlinks.json";
+import java.io.*;
 
-    public static String CHANGELOG =
-            "**===== CHANGELOG 1.0.4 =====** \n" +
-            "> Added the option to tag players using @Name instead of id\n" +
-            "> Bot now saves playerName-playerId links in a file, so it does not forget on server restart\n" +
-            "> Added the **purgeLinks** admin command to allow playerLink deletion\n";
+public class Config {
+    private String CHANGELOG =
+            "**===== CHANGELOG 1.0.5 =====** \n" +
+            "> All config is now stored in a separate file\n" +
+            "> Added **nickname add** admin command to add nicknames for discord users\n" +
+            "> Added **nickname remove** admin command to remove nicknames from the database\n" +
+            "> Added **nickname list** command to list all nicknames added to the database\n";
+
+    private String FOLDER_NAME = "./greychat";
+    private String CONFIG_FILENAME = "./greychat/config.json";
+
+
+    public String TOKEN;
+    public Character PREFIX = '|';
+    public boolean ALLOW_DEBUG = false;
+    public Long CHANNEL_ID;
+    public boolean SEND_ADVANCEMENTS = true;
+    public boolean SEND_JOINLEAVE = true;
+    public boolean SEND_DEATHS = true;
+    public String ACTIVITY = "over players";
+    public ActivityType ACTIVITY_TYPE = ActivityType.WATCHING;
+    public String PLAYER_LINK_FILENAME = "./greychat/playerlinks.json";
+    public String NICKNAME_FILENAME = "./greychat/nicknames.json";
+
+
+
+    public String GetChangelog() {
+        return CHANGELOG;
+    }
+
+    public boolean CreateConfigFile() {
+        CreateDirectory();
+        File configFile = new File(CONFIG_FILENAME);
+        if (!configFile.exists()) {
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            try {
+                String json = objectMapper.writeValueAsString(this);
+                try {
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(CONFIG_FILENAME, false));
+                    writer.write(json);
+                    writer.close();
+                }
+                catch (Exception e) {
+                    return false;
+                }
+                return true;
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        return false;
+    }
+
+    private void CreateDirectory() {
+        File directory = new File(FOLDER_NAME);
+        if (!directory.exists()) {
+            directory.mkdir();
+        }
+    }
+
+    public boolean ReadConfigFile() {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        String json;
+
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(CONFIG_FILENAME));
+            json = reader.readLine();
+            reader.close();
+
+            TypeReference<Config> typeRef
+                    = new TypeReference<Config>() {};
+            DiscordBot.config = objectMapper.readValue(json, typeRef);
+            return true;
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
 }
