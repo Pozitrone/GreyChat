@@ -16,31 +16,42 @@ import org.javacord.api.util.event.ListenerManager;
 
 import java.io.*;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static eu.theashenwolf.discordchat.Config.*;
 
 public class DiscordBot {
 
 
 
     public static BidiMap<String, String> users;
+    public static HashMap<String, String> nicknames;
     private static DiscordApi api;
     private DiscordCommands discordCommands;
     private ListenerManager<MessageCreateListener> listenerManager;
+    public static Config config;
 
 
     public DiscordBot() {
+        config = new Config();
+
+        if (config.CreateConfigFile()) {
+            System.out.println(ChatColor.RED + "Created empty config file. Please, fill out the requirements and restart the server.");
+        }
+        else {
+            if (!config.ReadConfigFile()) {
+                System.out.println(ChatColor.RED + "Failed reading config.");
+            }
+        }
 
         // Login to discord and create bot instance
-        api = new DiscordApiBuilder().setToken(TOKEN).login().join();
+        api = new DiscordApiBuilder().setToken(config.TOKEN).login().join();
 
         // Add a listener which answers with "Pong!" if someone writes "!ping"
         listenerManager = api.addMessageCreateListener(this::OnMessage);
 
-        if (api.getTextChannelById(CHANNEL_ID).isPresent()) {
-            TextChannel defaultChannel = api.getTextChannelById(CHANNEL_ID).get();
+        if (api.getTextChannelById(config.CHANNEL_ID).isPresent()) {
+            TextChannel defaultChannel = api.getTextChannelById(config.CHANNEL_ID).get();
             DiscordMessenger.InitAttachChannel(defaultChannel);
             DiscordMessenger.SendMessage("**Server booting up...**");
         }
@@ -51,10 +62,16 @@ public class DiscordBot {
         boolean playerLinksLoad = LoadPlayerLinks();
         DiscordMessenger.SendMessage("> Loading player links was " + (playerLinksLoad ? "successful." : "unsuccessful."));
 
-        discordCommands = new DiscordCommands(PREFIX);
+        nicknames = new HashMap<String, String>();
+
+        DiscordMessenger.SendMessage("**Loading nicknames...**");
+        boolean nicknameLoad = LoadNicknames();
+        DiscordMessenger.SendMessage("> Loading nicknames was " + (nicknameLoad ? "successful." : "unsuccessful."));
+
+        discordCommands = new DiscordCommands(config.PREFIX);
 
         api.updateStatus(UserStatus.ONLINE);
-        api.updateActivity(Config.ACTIVITY_TYPE, Config.ACTIVITY);
+        api.updateActivity(config.ACTIVITY_TYPE, config.ACTIVITY);
     }
 
     public void OnDisconnect() {
@@ -75,7 +92,7 @@ public class DiscordBot {
 
         String message = event.getMessageContent();
 
-        if (message.length() > 0 && message.charAt(0) == PREFIX) {
+        if (message.length() > 0 && message.charAt(0) == config.PREFIX) {
             DiscordMessenger.UpdateResponseChannel(event.getChannel());
             HandleCommand(message.substring(1).trim(), event.getMessageAuthor().isServerAdmin());
             return;
@@ -107,9 +124,18 @@ public class DiscordBot {
                     DiscordMessenger.Respond("Insufficient permissions");
                     return;
                 }
+            case "nickname":
+                if (args.length == 0) {
+                    DiscordMessenger.Respond("Not enough arguments.");
+                    return;
+                }
+                if ((args[0] == "add" || args[0] == "remove") && !isServerAdmin) {
+                    DiscordMessenger.Respond("Insufficient permissions");
+                    return;
+                }
         }
 
-        if (ALLOW_DEBUG) {
+        if (config.ALLOW_DEBUG) {
             switch (command) {
                 case "mcmsg":
                     discordCommands.Debug_Mcmsg(args);
@@ -120,13 +146,39 @@ public class DiscordBot {
         switch (command) {
             case "attach": discordCommands.Admin_Attach(); break; // admin
             case "detach": discordCommands.Admin_Detach(); break; // admin
-            case "info": discordCommands.Admin_Info(ALLOW_DEBUG); break; // admin
+            case "info": discordCommands.Admin_Info(config.ALLOW_DEBUG); break; // admin
             case "purgelinks": discordCommands.Admin_PurgeLinks(); break; // admin
-            case "help": discordCommands.Help(ALLOW_DEBUG, isServerAdmin); break;
+            case "help": discordCommands.Help(config.ALLOW_DEBUG, isServerAdmin); break;
             case "list": discordCommands.List(); break;
             case "time": discordCommands.Time(); break;
             case "changelog": discordCommands.Changelog(); break;
             case "deaths": discordCommands.Deaths(); break;
+            case "nickname":
+                if (args[0].trim().equals("list")) {
+                    discordCommands.Nickname_List();
+                    break;
+                }
+                if (args[0].trim().equals("add")) {
+                    if (args.length == 3) {
+                        discordCommands.Admin_Nickname_Add(args[1], args[2]);
+                    }
+                    else {
+                        DiscordMessenger.Respond("Invalid arguments.");
+                    }
+                    break;
+                }
+                if (args[0].trim().equals("remove")) {
+                    if (args.length == 2) {
+                        discordCommands.Admin_Nickname_Remove(args[1]);
+                    }
+                    else {
+                        DiscordMessenger.Respond("Invalid arguments.");
+                    }
+                    break;
+                }
+                DiscordMessenger.Respond(args[0]);
+                break;
+
             default:
                 DiscordMessenger.Respond("Unknown command.");
                 break;
@@ -157,7 +209,13 @@ public class DiscordBot {
                 message = message.replaceFirst("(.*)(?: |^)@([a-zA-Z0-9]+)(.*)", "$1" + " <@!" + playerId + ">" + "$3");
             }
             else {
-                message = message.replaceFirst("(.*)(?: |^)@([a-zA-Z0-9]+)(.*)", "$1" + " " + playerName + "$3");
+                playerId = nicknames.get(playerName.toLowerCase());
+                if (playerId != null) {
+                    message = message.replaceFirst("(.*)(?: |^)@([a-zA-Z0-9]+)(.*)", "$1" + " <@!" + playerId + ">" + "$3");
+                }
+                else {
+                    message = message.replaceFirst("(.*)(?: |^)@([a-zA-Z0-9]+)(.*)", "$1" + " " + playerName + "$3");
+                }
             }
         }
 
@@ -175,7 +233,13 @@ public class DiscordBot {
                 message = message.replaceFirst("(.*)(?: |^)@([a-zA-Z0-9]+)(.*)", "$1" + ChatColor.BLUE + " @" + playerName + ChatColor.RESET + "$3");
             }
             else {
-                message = message.replaceFirst("(.*)(?: |^)@([a-zA-Z0-9]+)(.*)", "$1" +  " @" + playerName + "$3");
+                playerId = nicknames.get(playerName.toLowerCase());
+                if (playerId != null) {
+                    message = message.replaceFirst("(.*)(?: |^)@([a-zA-Z0-9]+)(.*)", "$1" + ChatColor.BLUE + " @" + playerName + ChatColor.RESET + "$3");
+                }
+                else {
+                    message = message.replaceFirst("(.*)(?: |^)@([a-zA-Z0-9]+)(.*)", "$1" +  " @" + playerName + "$3");
+                }
             }
         }
 
@@ -212,7 +276,7 @@ public class DiscordBot {
         try {
             String json = objectMapper.writeValueAsString(users);
             try {
-                BufferedWriter writer = new BufferedWriter(new FileWriter(PLAYER_LINK_FILENAME, false));
+                BufferedWriter writer = new BufferedWriter(new FileWriter(config.PLAYER_LINK_FILENAME, false));
                 writer.write(json);
                 writer.close();
             }
@@ -232,13 +296,53 @@ public class DiscordBot {
         String json;
 
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(PLAYER_LINK_FILENAME));
+            BufferedReader reader = new BufferedReader(new FileReader(config.PLAYER_LINK_FILENAME));
             json = reader.readLine();
             reader.close();
 
             TypeReference<DualHashBidiMap<String, String>> typeRef
                         = new TypeReference<DualHashBidiMap<String, String>>() {};
             users = objectMapper.readValue(json, typeRef);
+            return true;
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static boolean SaveNicknames() {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            String json = objectMapper.writeValueAsString(nicknames);
+            try {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(config.NICKNAME_FILENAME, false));
+                writer.write(json);
+                writer.close();
+            }
+            catch (Exception e) {
+                return false;
+            }
+            return true;
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private boolean LoadNicknames() {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        String json;
+
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(config.NICKNAME_FILENAME));
+            json = reader.readLine();
+            reader.close();
+
+            TypeReference<HashMap<String, String>> typeRef
+                    = new TypeReference<HashMap<String, String>>() {};
+            nicknames = objectMapper.readValue(json, typeRef);
             return true;
         }
         catch (Exception e) {
