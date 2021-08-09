@@ -9,11 +9,8 @@ import java.io.*;
 
 public class Config {
     private String CHANGELOG =
-            "**===== CHANGELOG 1.0.5 =====** \n" +
-            "> All config is now stored in a separate file\n" +
-            "> Added **nickname add** admin command to add nicknames for discord users\n" +
-            "> Added **nickname remove** admin command to remove nicknames from the database\n" +
-            "> Added **nickname list** command to list all nicknames added to the database\n";
+            "**===== CHANGELOG 1.0.6 =====** \n" +
+            "> Fixed spoilers being treated as commands\n";
 
     private String FOLDER_NAME = "./greychat";
     private String CONFIG_FILENAME = "./greychat/config.json";

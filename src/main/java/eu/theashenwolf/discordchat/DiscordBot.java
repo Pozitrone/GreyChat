@@ -93,9 +93,11 @@ public class DiscordBot {
         String message = event.getMessageContent();
 
         if (message.length() > 0 && message.charAt(0) == config.PREFIX) {
-            DiscordMessenger.UpdateResponseChannel(event.getChannel());
-            HandleCommand(message.substring(1).trim(), event.getMessageAuthor().isServerAdmin());
-            return;
+            if (message.length() > 1 && message.charAt(1) != config.PREFIX) {
+                DiscordMessenger.UpdateResponseChannel(event.getChannel());
+                HandleCommand(message.substring(1).trim(), event.getMessageAuthor().isServerAdmin());
+                return;
+            }
         }
 
         if (event.getChannel() == DiscordMessenger.attachedChannel && !event.getMessageAttachments().isEmpty()) {
