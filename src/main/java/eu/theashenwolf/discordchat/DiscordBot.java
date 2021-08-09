@@ -351,4 +351,12 @@ public class DiscordBot {
             return false;
         }
     }
+
+    public static String ObfuscateMessage(String message) {
+        char[] obfuscatedMessageArray = new char[message.length()];
+        for (int i = 0; i < message.length(); i++) {
+            obfuscatedMessageArray[i] = '•';
+        }
+        return String.valueOf(obfuscatedMessageArray);
+    }
 }

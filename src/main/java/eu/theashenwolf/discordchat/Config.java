@@ -10,7 +10,8 @@ import java.io.*;
 public class Config {
     private String CHANGELOG =
             "**===== CHANGELOG 1.0.6 =====** \n" +
-            "> Fixed spoilers being treated as commands\n";
+            "> Fixed spoilers being treated as commands\n" +
+            "> Added spoiler tag handling\n";
 
     private String FOLDER_NAME = "./greychat";
     private String CONFIG_FILENAME = "./greychat/config.json";
