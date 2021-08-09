@@ -11,7 +11,8 @@ public class Config {
     private String CHANGELOG =
             "**===== CHANGELOG 1.0.6 =====** \n" +
             "> Fixed spoilers being treated as commands\n" +
-            "> Added spoiler tag handling\n";
+            "> Added spoiler tag handling\n" +
+            "> Added large code block handling\n";
 
     private String FOLDER_NAME = "./greychat";
     private String CONFIG_FILENAME = "./greychat/config.json";

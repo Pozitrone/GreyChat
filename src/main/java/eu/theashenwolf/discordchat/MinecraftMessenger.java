@@ -1,16 +1,15 @@
 package eu.theashenwolf.discordchat;
 
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.javacord.api.event.message.MessageCreateEvent;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,54 +24,15 @@ public class MinecraftMessenger {
     }
 
     public static void SendMessage(String playerName, String message, String playerId) {
+
         BaseComponent[] processedMessage;
-        Set<BaseComponent[]> components = new LinkedHashSet<>();
 
-        message = DiscordBot.ReplaceMentionsFromId(message);
-        message = DiscordBot.FormatMessage(message);
 
-        if (message.matches("([\\s\\S]*?)\\|\\|([\\s\\S]*?)\\|\\|([\\s\\S]*?)")) {
-
-            Set<String> obfuscatedMessageSet = new LinkedHashSet<>();
-            Set<String> clearMessageSet = new LinkedHashSet<>();
-
-                Pattern pattern = Pattern.compile("([\\s\\S]*?)\\|\\|([\\s\\S]*?)\\|\\|([\\s\\S]*)");
-                Matcher matcher = pattern.matcher(message);
-
-                while (matcher.find()) {
-                    obfuscatedMessageSet.add(matcher.group(1));
-                    clearMessageSet.add(matcher.group(1));
-
-                    obfuscatedMessageSet.add(DiscordBot.ObfuscateMessage(matcher.group(2)));
-                    clearMessageSet.add(matcher.group(2));
-
-                    if (!matcher.group(3).matches("([\\s\\S]*?)\\|\\|([\\s\\S]*?)\\|\\|([\\s\\S]*)")) {
-                        obfuscatedMessageSet.add(matcher.group(3));
-                        clearMessageSet.add(matcher.group(3));
-                    }
-                    else {
-                        matcher = pattern.matcher(matcher.group(3));
-                    }
-                }
-
-            String[] obfuscatedMessageArray = obfuscatedMessageSet.toArray(new String[0]);
-            String[] clearMessageArray = clearMessageSet.toArray(new String[0]);
-
-            for (int i = 0; i < obfuscatedMessageSet.size(); i++) {
-                if (obfuscatedMessageArray[i].matches("•*")) {
-                    components.add(new ComponentBuilder(obfuscatedMessageArray[i]).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(clearMessageArray[i]))).create());
-                }
-                else {
-                    components.add(new ComponentBuilder(clearMessageArray[i]).create());
-                }
-            }
-
-            ComponentBuilder componentBuilder = new ComponentBuilder();
-            for (BaseComponent[] component: components) {
-                componentBuilder.append(component);
-            }
-
-            processedMessage = componentBuilder.create();
+        if (message.matches("([\\s\\S]*?)```[a-zA-Z0-9]*([\\s\\S]*?)```([\\s\\S]*?)")) { // Codeblock
+            processedMessage = DiscordBot.HandleCodeblock(message);
+        }
+        else if (message.matches("([\\s\\S]*?)\\|\\|([\\s\\S]*?)\\|\\|([\\s\\S]*?)")) {
+            processedMessage = DiscordBot.HandleSpoilers(message);
         }
         else if (message.matches("https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)")){
             processedMessage = new ComponentBuilder(message)
@@ -81,6 +41,8 @@ public class MinecraftMessenger {
                     .create();
         }
         else {
+            message = DiscordBot.ReplaceMentionsFromId(message);
+            message = DiscordBot.FormatMessage(message);
             processedMessage = new ComponentBuilder(message).create();
         }
 

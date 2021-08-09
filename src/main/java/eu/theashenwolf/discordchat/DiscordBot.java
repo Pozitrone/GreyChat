@@ -4,6 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 import org.javacord.api.DiscordApi;
@@ -15,8 +20,10 @@ import org.javacord.api.listener.message.MessageCreateListener;
 import org.javacord.api.util.event.ListenerManager;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -269,6 +276,11 @@ public class DiscordBot {
             message = message.replaceFirst("(.*?)~~(.*?)~~(.*?)", "$1" + ChatColor.STRIKETHROUGH + "$2" + ChatColor.RESET + "$3");
         }
 
+        // handle `codeblock`
+        while (message.matches("(.*?)`(.*?)`(.*?)")) {
+            message = message.replaceFirst("(.*?)`(.*?)`(.*?)", "$1" + ChatColor.GRAY + "$2" + ChatColor.RESET + "$3");
+        }
+
         return message;
     }
 
@@ -358,5 +370,94 @@ public class DiscordBot {
             obfuscatedMessageArray[i] = '•';
         }
         return String.valueOf(obfuscatedMessageArray);
+    }
+
+    public static BaseComponent[] HandleSpoilers(String message) {
+        message = DiscordBot.ReplaceMentionsFromId(message);
+        message = DiscordBot.FormatMessage(message);
+        List<String> obfuscatedMessageSet = new ArrayList<>();
+        List<String> clearMessageSet = new ArrayList<>();
+
+        Pattern pattern = Pattern.compile("([\\s\\S]*?)\\|\\|([\\s\\S]*?)\\|\\|([\\s\\S]*)");
+        Matcher matcher = pattern.matcher(message);
+
+        while (matcher.find()) {
+            obfuscatedMessageSet.add(matcher.group(1));
+            clearMessageSet.add(matcher.group(1));
+
+            obfuscatedMessageSet.add(DiscordBot.ObfuscateMessage(matcher.group(2)));
+            clearMessageSet.add(matcher.group(2));
+
+            if (!matcher.group(3).matches("([\\s\\S]*?)\\|\\|([\\s\\S]*?)\\|\\|([\\s\\S]*)")) {
+                obfuscatedMessageSet.add(matcher.group(3));
+                clearMessageSet.add(matcher.group(3));
+            }
+            else {
+                matcher = pattern.matcher(matcher.group(3));
+            }
+        }
+
+        String[] obfuscatedMessageArray = obfuscatedMessageSet.toArray(new String[0]);
+        String[] clearMessageArray = clearMessageSet.toArray(new String[0]);
+
+        ComponentBuilder componentBuilder = new ComponentBuilder();
+        componentBuilder.append(new TextComponent(""));
+
+        for (int i = 0; i < obfuscatedMessageSet.size(); i++) {
+            if (obfuscatedMessageArray[i].matches("•*")) {
+                componentBuilder.append(new ComponentBuilder(obfuscatedMessageArray[i]).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(clearMessageArray[i]))).create());
+            }
+            else {
+                componentBuilder.append(new ComponentBuilder(clearMessageArray[i]).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(""))).create());
+            }
+        }
+
+        return componentBuilder.create();
+    }
+
+    public static BaseComponent[] HandleCodeblock(String message) {
+        List<String> obfuscatedMessageSet = new ArrayList<>();
+        List<String> clearMessageSet = new ArrayList<>();
+
+        Pattern pattern = Pattern.compile("([\\s\\S]*?)```[a-zA-Z0-9]*([\\s\\S]*?)```([\\s\\S]*)");
+        Matcher matcher = pattern.matcher(message);
+
+        while (matcher.find()) {
+            obfuscatedMessageSet.add(matcher.group(1));
+            clearMessageSet.add(matcher.group(1));
+
+            obfuscatedMessageSet.add("[code block]");
+            clearMessageSet.add(matcher.group(2));
+
+            if (!matcher.group(3).matches("([\\s\\S]*?)```[a-zA-Z0-9]*([\\s\\S]*?)```([\\s\\S]*)")) {
+                obfuscatedMessageSet.add(matcher.group(3));
+                clearMessageSet.add(matcher.group(3));
+            }
+            else {
+                matcher = pattern.matcher(matcher.group(3));
+            }
+        }
+
+        String[] obfuscatedMessageArray = obfuscatedMessageSet.toArray(new String[0]);
+        String[] clearMessageArray = clearMessageSet.toArray(new String[0]);
+
+        for (int i = 0; i <clearMessageArray.length; i++) {
+            String clearMessage = clearMessageArray[i];
+            clearMessage = DiscordBot.ReplaceMentionsFromId(clearMessage);
+            clearMessageArray[i] = DiscordBot.FormatMessage(clearMessage);
+        }
+
+        ComponentBuilder componentBuilder = new ComponentBuilder();
+
+        for (int i = 0; i < obfuscatedMessageSet.size(); i++) {
+            if (obfuscatedMessageArray[i].matches("[\\s\\S]*\\[code block][\\s\\S]*")) {
+                componentBuilder.append(new ComponentBuilder(obfuscatedMessageArray[i]).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(clearMessageArray[i]))).create());
+            }
+            else {
+                componentBuilder.append(new ComponentBuilder(clearMessageArray[i]).event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(""))).create());
+            }
+        }
+
+        return componentBuilder.create();
     }
 }
