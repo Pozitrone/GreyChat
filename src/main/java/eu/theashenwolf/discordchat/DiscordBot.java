@@ -91,7 +91,7 @@ public class DiscordBot {
         if (event.getMessageAuthor().isBotUser()) return;
 
         if (!users.containsKey(String.valueOf(event.getMessageAuthor().getId()))) {
-            users.putIfAbsent(String.valueOf(event.getMessageAuthor().getId()), event.getMessageAuthor().getDisplayName().replace(" ", ""));
+            users.putIfAbsent(String.valueOf(event.getMessageAuthor().getId()), event.getMessageAuthor().getDisplayName().replace(" ", "").toLowerCase());
             DiscordMessenger.SendMessage("**Found new name, adding to links...**");
             Boolean playerLinkSave = SavePlayerLinks();
             DiscordMessenger.SendMessage("> Saving player links was " + (playerLinkSave ? "successful." : "unsuccessful."));
@@ -133,6 +133,7 @@ public class DiscordBot {
                     DiscordMessenger.Respond("Insufficient permissions");
                     return;
                 }
+                break;
             case "nickname":
                 if (args.length == 0) {
                     DiscordMessenger.Respond("Not enough arguments.");
@@ -142,6 +143,7 @@ public class DiscordBot {
                     DiscordMessenger.Respond("Insufficient permissions");
                     return;
                 }
+                break;
         }
 
         if (config.ALLOW_DEBUG) {
