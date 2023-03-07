@@ -54,7 +54,7 @@ public class DiscordCommands {
         if (success) DiscordMessenger.Respond("**Link purge was successful**");
     }
 
-    public void Admin_Nickname_Add(String nickname, String id) {
+    /*public void Admin_Nickname_Add(String nickname, String id) {
         if (id.matches("<@!([0-9]{18})>")) {
             String playerId = id.replaceAll("<@!([0-9]{18})>", "$1");
 
@@ -70,9 +70,9 @@ public class DiscordCommands {
         else {
             DiscordMessenger.Respond("Please, @Tag the user to add the nickname.");
         }
-    }
+    }*/
 
-    public void Admin_Nickname_Remove(String nickname) {
+    /*public void Admin_Nickname_Remove(String nickname) {
         if (!DiscordBot.nicknames.containsKey(nickname)) {
             DiscordMessenger.Respond("There is no such nickname in the list.");
         }
@@ -81,7 +81,7 @@ public class DiscordCommands {
             DiscordBot.SaveNicknames();
             DiscordMessenger.Respond("Nickname removed.");
         }
-    }
+    }*/
 
     public void Help(boolean allowDebug, boolean isServerAdmin) {
         DiscordMessenger.Respond(" **Prefix:** `" + prefix + "`\n" + "\n** ===== AVAILABLE COMMANDS ===== **");
@@ -91,16 +91,16 @@ public class DiscordCommands {
             stringBuffer.append("> A - **detach:** Detaches current channel.\n");
             stringBuffer.append("> A - **info:** Lists info about current attachment status\n");
             stringBuffer.append("> A - **purgeLinks:** Clears all remembered player data\n");
-            stringBuffer.append("> A - **nickname add [nickname] [tag]:** Binds a nickname to user\n");
-            stringBuffer.append("> A - **nickname remove [nickname]:** Removes a nickname\n");
+            // stringBuffer.append("> A - **nickname add [nickname] [tag]:** Binds a nickname to user\n");
+            // stringBuffer.append("> A - **nickname remove [nickname]:** Removes a nickname\n");
             stringBuffer.append("----------------\n");
         }
         stringBuffer.append("> **help:** Displays this help\n");
         stringBuffer.append("> **list:** Shows the list of active players\n");
         stringBuffer.append("> **time:** Displays the current in-game time\n");
         stringBuffer.append("> **changelog:** Displays the changelog for the latest version\n");
-        stringBuffer.append("> **deaths:** Returns the current death leaderboard\n");
-        stringBuffer.append("> **nickname list:** Prints all existing nicknames\n");
+        // stringBuffer.append("> **deaths:** Returns the current death leaderboard\n");
+        // stringBuffer.append("> **nickname list:** Prints all existing nicknames\n");
         DiscordMessenger.Respond(stringBuffer.toString());
 
         if (allowDebug) {
@@ -123,7 +123,7 @@ public class DiscordCommands {
         DiscordMessenger.Respond("Current in-game time: **" + MinecraftMessenger.GetTime() + "**");
     }
 
-    public void Deaths() {
+    /*public void Deaths() {
         ScoreboardManager scoreboardManager = MinecraftMessenger.gameServer.getScoreboardManager();
         Objective deaths = scoreboardManager.getMainScoreboard().getObjective("Deaths");
         HashMap<String, Integer> leaderboard = new HashMap<>();
@@ -146,9 +146,9 @@ public class DiscordCommands {
         }
 
         DiscordMessenger.Respond(header + message);
-    }
+    }*/
 
-    public void Nickname_List() {
+    /*public void Nickname_List() {
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append("**===== All nicknames: =====**\n");
         for (String nickname: DiscordBot.nicknames.keySet()) {
@@ -156,7 +156,7 @@ public class DiscordCommands {
             stringBuffer.append(nickname + " - " + (username == null ? "[unknown user]" : username) + "\n");
         }
         DiscordMessenger.Respond(stringBuffer.toString());
-    }
+    }*/
 
     public void Debug_Mcmsg(String[] args) {
         if (args.length == 0) return;

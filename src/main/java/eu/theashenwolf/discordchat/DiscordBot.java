@@ -32,7 +32,7 @@ public class DiscordBot {
 
 
     public static BidiMap<String, String> users;
-    public static HashMap<String, String> nicknames;
+    // public static HashMap<String, String> nicknames;
     private static DiscordApi api;
     private DiscordCommands discordCommands;
     private ListenerManager<MessageCreateListener> listenerManager;
@@ -69,11 +69,11 @@ public class DiscordBot {
         boolean playerLinksLoad = LoadPlayerLinks();
         DiscordMessenger.SendMessage("> Loading player links was " + (playerLinksLoad ? "successful." : "unsuccessful."));
 
-        nicknames = new HashMap<String, String>();
+        // nicknames = new HashMap<String, String>();
 
-        DiscordMessenger.SendMessage("**Loading nicknames...**");
-        boolean nicknameLoad = LoadNicknames();
-        DiscordMessenger.SendMessage("> Loading nicknames was " + (nicknameLoad ? "successful." : "unsuccessful."));
+        // DiscordMessenger.SendMessage("**Loading nicknames...**");
+        // boolean nicknameLoad = LoadNicknames();
+        // DiscordMessenger.SendMessage("> Loading nicknames was " + (nicknameLoad ? "successful." : "unsuccessful."));
 
         discordCommands = new DiscordCommands(config.PREFIX);
 
@@ -163,8 +163,8 @@ public class DiscordBot {
             case "list": discordCommands.List(); break;
             case "time": discordCommands.Time(); break;
             case "changelog": discordCommands.Changelog(); break;
-            case "deaths": discordCommands.Deaths(); break;
-            case "nickname":
+            c// ase "deaths": discordCommands.Deaths(); break;
+            /*case "nickname":
                 if (args[0].trim().equals("list")) {
                     discordCommands.Nickname_List();
                     break;
@@ -189,7 +189,7 @@ public class DiscordBot {
                 }
                 DiscordMessenger.Respond(args[0]);
                 break;
-
+            */
             default:
                 DiscordMessenger.Respond("Unknown command.");
                 break;
@@ -220,13 +220,13 @@ public class DiscordBot {
                 message = message.replaceFirst("(.*)(?: |^)@([a-zA-Z0-9]+)(.*)", "$1" + " <@!" + playerId + ">" + "$3");
             }
             else {
-                playerId = nicknames.get(playerName.toLowerCase());
-                if (playerId != null) {
-                    message = message.replaceFirst("(.*)(?: |^)@([a-zA-Z0-9]+)(.*)", "$1" + " <@!" + playerId + ">" + "$3");
-                }
-                else {
+                // playerId = nicknames.get(playerName.toLowerCase());
+                // if (playerId != null) {
+                //     message = message.replaceFirst("(.*)(?: |^)@([a-zA-Z0-9]+)(.*)", "$1" + " <@!" + playerId + ">" + "$3");
+                // }
+                // else {
                     message = message.replaceFirst("(.*)(?: |^)@([a-zA-Z0-9]+)(.*)", "$1" + " " + playerName + "$3");
-                }
+                // }
             }
         }
 
@@ -244,13 +244,13 @@ public class DiscordBot {
                 message = message.replaceFirst("(.*)(?: |^)@([a-zA-Z0-9]+)(.*)", "$1" + ChatColor.BLUE + " @" + playerName + ChatColor.RESET + "$3");
             }
             else {
-                playerId = nicknames.get(playerName.toLowerCase());
-                if (playerId != null) {
-                    message = message.replaceFirst("(.*)(?: |^)@([a-zA-Z0-9]+)(.*)", "$1" + ChatColor.BLUE + " @" + playerName + ChatColor.RESET + "$3");
-                }
-                else {
+                // playerId = nicknames.get(playerName.toLowerCase());
+                // if (playerId != null) {
+                //     message = message.replaceFirst("(.*)(?: |^)@([a-zA-Z0-9]+)(.*)", "$1" + ChatColor.BLUE + " @" + playerName + ChatColor.RESET + "$3");
+                // }
+                // else {
                     message = message.replaceFirst("(.*)(?: |^)@([a-zA-Z0-9]+)(.*)", "$1" +  " @" + playerName + "$3");
-                }
+                // }
             }
         }
 
@@ -326,7 +326,7 @@ public class DiscordBot {
         }
     }
 
-    public static boolean SaveNicknames() {
+    /*public static boolean SaveNicknames() {
         ObjectMapper objectMapper = new ObjectMapper();
 
         try {
@@ -344,9 +344,9 @@ public class DiscordBot {
             e.printStackTrace();
             return false;
         }
-    }
+    }*/
 
-    private boolean LoadNicknames() {
+    /*private boolean LoadNicknames() {
         ObjectMapper objectMapper = new ObjectMapper();
 
         String json;
@@ -364,7 +364,7 @@ public class DiscordBot {
         catch (Exception e) {
             return false;
         }
-    }
+    }*/
 
     public static String ObfuscateMessage(String message) {
         char[] obfuscatedMessageArray = new char[message.length()];

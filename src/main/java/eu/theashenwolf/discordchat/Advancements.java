@@ -5,6 +5,7 @@ import java.util.Map;
 
 public class Advancements {
     public static Map<String, String> Advancements = new HashMap<String, String>() {{
+        // Until 1.17
         put("nether/obtain_crying_obsidian","**[Who Is Cutting Onions?]**");
         put("nether/distract_piglin","**[Oh Shiny]**");
         put("story/obtain_armor","**[Suit Up]**");
@@ -73,26 +74,46 @@ public class Advancements {
         put("adventure/ol_betsy","**[Ol' Betsy]**");
         put("story/enter_the_end","**[The End?]**");
         put("husbandry/breed_an_animal","**[The Parrots and the Bats]**");
+        // 1.18
+        put("adventure/fall_from_world_height", "**[Caves & Cliffs]**")
+        put("nether/ride_strider_in_overworld_lava", "**[Feels Like Home]**")
+        put("adventure/trade_at_world_height", "**[Star Trader]**")
+        put("adventure/play_jukebox_in_meadows", "**[Sound of Music]**")
+        // 1.19
+        put("husbandry/tadpole_in_a_bucket", "**[Bukkit Bukkit]**")
+        put("husbandry/allay_deliver_cake_to_note_block", "**[Birthday Song]**")
+        put("husbandry/allay_deliver_item_to_player", "**[You've Got a Friend in Me]**")
+        put("adventure/avoid_vibration", "**[Sneak 100]**")
+        put("husbandry/leash_all_frog_variants", "**[When the Squad Hops into Town]**")
+        // None added in 1.20 (at least not until 23w07a)
+
     }};
 
     public static Map<String, String> Challenges = new HashMap<String, String>() {{
-        put("husbandry/complete_catalogue","**[A Complete Catalogue]**"); //
-        put("nether/netherite_armor","**[Cover Me in Debris]**"); //
-        put("husbandry/balanced_diet","**[A Balanced Diet]**"); //
-        put("nether/fast_travel","**[Subspace Bubble]**"); //
-        put("adventure/hero_of_the_village","**[Hero of the Village]**"); //
-        put("adventure/adventuring_time","**[Adventuring Time]**"); //
-        put("husbandry/obtain_netherite_hoe","**[Serious Dedication]**"); //
-        put("adventure/kill_all_mobs","**[Monsters Hunted]**"); //
-        put("nether/return_to_sender","**[Return to Sender]**"); //
-        put("adventure/two_birds_one_arrow","**[Two Birds, One Arrow]**"); //
-        put("nether/uneasy_alliance","**[Uneasy Alliance]**"); //
-        put("adventure/sniper_duel","**[Sniper Duel]**"); //
-        put("end/levitate","**[Great View From Up Here]**"); //
-        put("adventure/arbalistic","**[Arbalistic]**"); //
-        put("husbandry/bred_all_animals","**[Two by Two]**"); //
-        put("nether/explore_nether","**[Hot Tourist Destinations]**"); //
-        put("nether/all_potions","**[A Furious Cocktail]**"); //
-        put("adventure/bullseye","**[Bullseye]**"); //
+        // Until 1.17
+        put("husbandry/complete_catalogue","**[A Complete Catalogue]**");
+        put("nether/netherite_armor","**[Cover Me in Debris]**");
+        put("husbandry/balanced_diet","**[A Balanced Diet]**");
+        put("nether/fast_travel","**[Subspace Bubble]**");
+        put("adventure/hero_of_the_village","**[Hero of the Village]**");
+        put("adventure/adventuring_time","**[Adventuring Time]**");
+        put("husbandry/obtain_netherite_hoe","**[Serious Dedication]**");
+        put("adventure/kill_all_mobs","**[Monsters Hunted]**");
+        put("nether/return_to_sender","**[Return to Sender]**");
+        put("adventure/two_birds_one_arrow","**[Two Birds, One Arrow]**");
+        put("nether/uneasy_alliance","**[Uneasy Alliance]**");
+        put("adventure/sniper_duel","**[Sniper Duel]**");
+        put("end/levitate","**[Great View From Up Here]**");
+        put("adventure/arbalistic","**[Arbalistic]**");
+        put("husbandry/bred_all_animals","**[Two by Two]**");
+        put("nether/explore_nether","**[Hot Tourist Destinations]**");
+        put("nether/all_potions","**[A Furious Cocktail]**");
+        put("adventure/bullseye","**[Bullseye]**");
+        // None added in 1.18
+        // 1.19
+        put("adventure/kill_mob_near_sculk_catalyst","**[It Spreads]**");
+        put("husbandry/froglights","**[With Our Powers Combined!]**");
+        // None added in 1.20 (at least not until 23w07a)
+
     }};
 }

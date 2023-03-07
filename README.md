@@ -1,4 +1,6 @@
-# Discord Chat Bot For Minecraft 1.17.1
+# Discord Chat Bot For Minecraft
+![Minecraft Version 1.19.3](https://img.shields.io/badge/Minecraft%20Version-1.19.3-blue)
+
 This chatbot was written for my friends server, so we can chat even when one of us can't be ingame.
 Built on PaperMC
 

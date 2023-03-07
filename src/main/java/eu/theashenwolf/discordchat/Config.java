@@ -9,6 +9,9 @@ import java.io.*;
 
 public class Config {
     private String CHANGELOG =
+            "**===== CHANGELOG 1.1.0 =====** \n" +
+            "> Updated all advancements until 23w07a \n" +
+            "> De-personalized the bot for wider use \n" +
             "**===== CHANGELOG 1.0.6 =====** \n" +
             "> Fixed spoilers being treated as commands\n" +
             "> Added spoiler tag handling\n" +
