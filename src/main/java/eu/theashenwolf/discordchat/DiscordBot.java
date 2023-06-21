@@ -163,7 +163,7 @@ public class DiscordBot {
             case "list": discordCommands.List(); break;
             case "time": discordCommands.Time(); break;
             case "changelog": discordCommands.Changelog(); break;
-            c// ase "deaths": discordCommands.Deaths(); break;
+            // case "deaths": discordCommands.Deaths(); break;
             /*case "nickname":
                 if (args[0].trim().equals("list")) {
                     discordCommands.Nickname_List();
